@@ -3,6 +3,7 @@ extends CharacterBody3D
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
+const SENSITIVITY = 30
 
 @onready var camera_holder: Node3D = $CameraHolder
 @onready var camera_3d: Camera3D = $CameraHolder/Camera3D
@@ -11,7 +12,7 @@ var isMouseCaptured = false
 
 func _unhandled_input(event: InputEvent) -> void:
 	#Lock mouse when clicked on window
-	if event == InputEventMouseButton:
+	if event is InputEventMouseButton:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		isMouseCaptured = true
 		print("Mouse Captured")
@@ -22,11 +23,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		
 	#If mouse is in window, have camera follow mouse
 	if isMouseCaptured:
-		if event == InputEventMouseMotion:
+		if event is InputEventMouseMotion:
 			print("Following Camera")
-			camera_holder.rotate_y(-event.relative.x * 0.01)
-			camera_3d.rotate_x(-event.relative.y * 0.01)
-			camera_3d.rotation.x = clamp(camera_3d.rotation.x, deg_to_rad(-30), deg_to_rad(60))
+			camera_holder.rotate_y(-event.relative.x * 0.01 * SENSITIVITY / 100)
+			camera_3d.rotate_x(-event.relative.y * 0.01 * SENSITIVITY / 100)
+			camera_3d.rotation.x = clamp(camera_3d.rotation.x, deg_to_rad(-60), deg_to_rad(90))
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
